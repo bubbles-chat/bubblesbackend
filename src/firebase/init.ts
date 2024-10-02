@@ -1,6 +1,6 @@
 import admin from 'firebase-admin'
 
-export function initializeFirebase() {
+export default function initializeFirebase() {
     const serviceAccount: admin.ServiceAccount = {
         projectId: process.env.FIREBASE_PROJECT_ID,
         privateKey: process.env.FIREBASE_PRIVATE_KEY,
