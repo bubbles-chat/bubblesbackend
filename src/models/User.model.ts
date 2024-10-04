@@ -3,9 +3,13 @@ import { model, Schema } from "mongoose";
 const UserSchema = new Schema({
     chats: [{ type: Schema.ObjectId }],
     connections: [{ type: Schema.ObjectId }],
-    displayName: String,
+    displayName: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
+        required: true,
         unique: true
     },
     pendingRequests: [{ type: String }],
