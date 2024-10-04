@@ -2,6 +2,7 @@ import { config } from 'dotenv'
 import express from 'express'
 import connect from './db/connect'
 import userRouter from './modules/user/user.router'
+import checkAuth from './middlewares/auth.middleware'
 
 config()
 
@@ -13,6 +14,9 @@ connect()
 // config
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+// middlewares
+app.use(checkAuth)
 
 // routes
 app.use('/user', userRouter)
