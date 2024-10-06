@@ -1,8 +1,8 @@
 import { model, Schema } from "mongoose";
 
 const UserSchema = new Schema({
-    chats: [{ type: Schema.ObjectId }],
-    connections: [{ type: Schema.ObjectId }],
+    chats: [{ type: Schema.ObjectId, ref: 'Chat' }],
+    connections: [{ type: Schema.ObjectId, ref: 'User' }],
     displayName: {
         type: String,
         required: true
@@ -12,11 +12,8 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
-    pendingRequests: [{ type: String }],
-    pendingRequestsSeen: Boolean,
     photoURL: String,
-    sentRequests: [{ type: String }]
-})
+}, { timestamps: true })
 
 const User = model('User', UserSchema)
 export default User
