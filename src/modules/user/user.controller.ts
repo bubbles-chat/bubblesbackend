@@ -29,9 +29,11 @@ export const getUserByUsername = async (req: Request, res: Response): Promise<vo
         return;
     }
 
-    const users = await User.find({ displayName: username })
+    let users = await User.find({ displayName: { $regex: username, $options: 'i' } })
         .skip(Number(skip))
         .limit(Number(limit));
+
+    users = users.filter(user => user.email !== req.authUser?.email)
 
     res.status(200).json({ message: 'Found users', users });
 };
