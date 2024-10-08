@@ -20,6 +20,22 @@ export const getUserByEmail = async (req: Request, res: Response): Promise<void>
     res.status(200).json({ message: 'User found', user })
 }
 
+export const getUserByUsername = async (req: Request, res: Response): Promise<void> => {
+    const { username } = req.params;
+    const { limit = 10, skip = 0 } = req.query;
+
+    if (!username) {
+        res.status(400).json({ message: 'Username is required' });
+        return;
+    }
+
+    const users = await User.find({ displayName: username })
+        .skip(Number(skip))
+        .limit(Number(limit));
+
+    res.status(200).json({ message: 'Found users', users });
+};
+
 export const updateUserInfo = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params
     const { displayName, photoURL }: { displayName: string, photoURL: string } = req.body
@@ -43,7 +59,7 @@ export const updateUserInfo = async (req: Request, res: Response): Promise<void>
 
 export const deleteUserByEmail = async (req: Request, res: Response): Promise<void> => {
     const { email } = req.params
-    const deletedUser = await User.deleteOne({ email })    
+    const deletedUser = await User.deleteOne({ email })
 
     if (deletedUser.deletedCount === 0) {
         res.status(404).json({ message: 'User not found' })
