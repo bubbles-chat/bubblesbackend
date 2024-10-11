@@ -3,6 +3,7 @@ import express from 'express'
 import connect from './db/connect'
 import userRouter from './modules/user/user.router'
 import checkAuth from './middlewares/auth.middleware'
+import notificationTokenRouter from './modules/notificationToken/notificationToken.route'
 
 config()
 
@@ -20,6 +21,7 @@ app.use(checkAuth)
 
 // routes
 app.use('/user', userRouter)
+app.use('/notificationToken', notificationTokenRouter)
 app.get('/', (req, res, next) => {
     res.send('hello world')
 })
