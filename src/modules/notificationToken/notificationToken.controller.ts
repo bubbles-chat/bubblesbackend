@@ -15,3 +15,15 @@ export const addToken = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({ message: "Device token has been added", token: doc })
 }
+
+export const deleteToken = async (req: Request, res: Response): Promise<void> => {
+    const { token } = req.params
+
+    if (!token) {
+        res.status(400).json({ message: "Please provide a token" })
+    }
+
+    await NotificationToken.deleteOne({ token })
+
+    res.status(200).json({ message: "A token has been deleted" })
+}
