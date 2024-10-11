@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import admin from 'firebase-admin'
+import User from "../models/User.model";
 
 const checkAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -17,12 +18,18 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction): Promi
         }
 
         const verificationResult = await admin.auth().verifyIdToken(token)
-        req.authUser = verificationResult
+        const user = await User.findOne({ email: verificationResult.email })
+        
+        if (user) {
+            req.authUser = user.toObject()
+        } else {
+            throw new Error()
+        }
 
         next()
     } catch (e) {
         console.error(e);
-        
+
         res.status(401).json({ message: 'Authorization failed' })
     }
 }
