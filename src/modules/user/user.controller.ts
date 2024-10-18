@@ -11,7 +11,7 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
 
 export const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
     const { email } = req.params
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).populate(['connections', 'chats'])
 
     if (!user) {
         res.status(404).json({ message: 'User not found' })
