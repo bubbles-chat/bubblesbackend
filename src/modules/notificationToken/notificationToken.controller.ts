@@ -6,6 +6,7 @@ export const addToken = async (req: Request, res: Response): Promise<void> => {
 
     if (!token) {
         res.status(400).json({ message: "Please provide a token" })
+        return
     }
 
     const doc = await NotificationToken.create({
@@ -21,6 +22,7 @@ export const deleteToken = async (req: Request, res: Response): Promise<void> =>
 
     if (!token) {
         res.status(400).json({ message: "Please provide a token" })
+        return
     }
 
     await NotificationToken.deleteOne({ token })
