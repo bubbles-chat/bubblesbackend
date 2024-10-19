@@ -22,8 +22,6 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction): Promi
         
         if (user) {
             req.authUser = user.toObject()
-        } else {
-            throw new Error()
         }
 
         next()
