@@ -54,6 +54,24 @@ export const getUserByUsername = async (req: Request, res: Response): Promise<vo
     res.status(200).json({ message: 'Found users', users });
 };
 
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params
+
+    if (!id) {
+        res.status(400).json({ message: 'No user id provided' })
+        return
+    }
+
+    const user = await User.findById(id)
+
+    if (!user) {
+        res.status(404).json({ message: 'User not found' })
+        return
+    }
+
+    res.status(200).json({ message: 'User found', user })
+}
+
 export const updateUserInfo = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params
     const { displayName, photoURL }: { displayName: string, photoURL: string } = req.body
