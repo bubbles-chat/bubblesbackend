@@ -1,5 +1,6 @@
 import User from "../../models/User.model";
 import { Request, Response } from "express";
+import ConnectionRequest from "../../models/Request.model"
 
 export const addUser = async (req: Request, res: Response): Promise<void> => {
     const { email, displayName, photoURL } = req.body
@@ -10,7 +11,7 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
 
 export const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
     const { email } = req.params
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).populate(['connections', 'chats'])
 
     if (!user) {
         res.status(404).json({ message: 'User not found' })
@@ -33,10 +34,43 @@ export const getUserByUsername = async (req: Request, res: Response): Promise<vo
         .skip(Number(skip))
         .limit(Number(limit));
 
+    const requests = (await ConnectionRequest.find({
+        $or: [
+            { sender: req.authUser._id, status: 'pending' },
+            { sender: req.authUser._id, status: 'accepted' },
+            { receiver: req.authUser._id, status: 'pending' },
+            { receiver: req.authUser._id, status: 'accepted' }
+        ]
+    })).map(request => {
+        if (request.sender.equals(req.authUser._id))
+            return request.receiver.toString()
+        else
+            return request.sender.toString()
+    })
+
     users = users.filter(user => user.email !== req.authUser?.email)
+    users = users.filter(user => !requests.includes(user._id.toString()))
 
     res.status(200).json({ message: 'Found users', users });
 };
+
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params
+
+    if (!id) {
+        res.status(400).json({ message: 'No user id provided' })
+        return
+    }
+
+    const user = await User.findById(id)
+
+    if (!user) {
+        res.status(404).json({ message: 'User not found' })
+        return
+    }
+
+    res.status(200).json({ message: 'User found', user })
+}
 
 export const updateUserInfo = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params
