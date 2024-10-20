@@ -1,34 +1,7 @@
-import { config } from 'dotenv'
-import express from 'express'
-import connect from './db/connect'
-import userRouter from './modules/user/user.router'
-import checkAuth from './middlewares/auth.middleware'
-import notificationTokenRouter from './modules/notificationToken/notificationToken.route'
-import requestRouter from './modules/request/request.route'
+import server from "./io"
 
-config()
-
-const app = express()
 const port = process.env.PORT ?? 3000
 
-connect()
-
-// config
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-// middlewares
-app.use(checkAuth)
-
-// routes
-app.use('/user', userRouter)
-app.use('/notificationToken', notificationTokenRouter)
-app.use('/request', requestRouter)
-
-app.get('/', (req, res, next) => {
-    res.send('hello world')
-})
-
-app.listen(port, () => {
-    console.log(`Server running on ${port}`);
+server.listen(port, () => {
+    console.log(`Server is running on ${port}`);
 })

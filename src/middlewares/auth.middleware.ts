@@ -15,6 +15,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction): Promi
 
         if (!token) {
             res.status(401).json({ message: 'Missing token' })
+            return
         }
 
         const verificationResult = await admin.auth().verifyIdToken(token)
