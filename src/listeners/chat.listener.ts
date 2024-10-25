@@ -48,10 +48,25 @@ const registerChatHandler = (io: Server<DefaultEventsMap, DefaultEventsMap, Defa
         }
     }
 
+    const editMessage = async (payload: { text: string, id: string }) => {
+        try {
+            const message = await Message.findByIdAndUpdate(payload.id, {
+                text: payload.text
+            })
+
+            if (message) {
+                io.to(message.chatId.toString()).emit('chat:messageEdited', payload)
+            }
+        } catch (e) {
+            console.error('updateMessage:', e);
+        }
+    }
+
     socket.on('chat:joinRoom', joinChatRoom)
     socket.on('chat:leaveRoom', leaveChatRoom)
     socket.on('chat:newMessage', newMessage)
     socket.on('chat:deleteMessage', deleteMessage)
+    socket.on('chat:editMessage', editMessage)
 }
 
 export default registerChatHandler
