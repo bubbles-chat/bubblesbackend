@@ -30,7 +30,7 @@ const registerChatHandler = (io: Server<DefaultEventsMap, DefaultEventsMap, Defa
                 title: chat?.chatName ? chat.chatName : socket.data.user.displayName,
                 body: payload.text
             })
-            io.to(payload.chatId).emit('chat:messageAdded', { message })
+            io.to(payload.chatId).emit('chat:messageAdded', { chatId: payload.chatId, message })
         } catch (e) {
             console.error('newMessage', e);
         }
