@@ -18,8 +18,7 @@ const registerChatHandler = (io: Server<DefaultEventsMap, DefaultEventsMap, Defa
                 attachmentsUrl: payload.aattachmentsUrl,
                 chatId: payload.chatId,
                 sender: socket.data.user._id,
-                text: payload.text,
-                createdAt: Date.now()
+                text: payload.text
             })
             const chat = await Chat.findByIdAndUpdate(payload.chatId, {
                 lastMessage: message._id
