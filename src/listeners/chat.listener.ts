@@ -41,7 +41,7 @@ const registerChatHandler = (io: Server<DefaultEventsMap, DefaultEventsMap, Defa
             const message = await Message.findByIdAndDelete(payload)
 
             if (message) {
-                socket.emit('chat:messageDeleted', payload)
+                io.to(message.chatId.toString()).emit('chat:messageDeleted', payload)
             }
         } catch (e) {
             console.error('deleteMessage:', e);
