@@ -12,10 +12,10 @@ const registerChatHandler = (io: Server<DefaultEventsMap, DefaultEventsMap, Defa
         socket.leave(payload)
     }
 
-    const newMessage = async (payload: { aattachmentsUrl: string[]; chatId: string; text: string }) => {
+    const newMessage = async (payload: { attachmentsUrl: string[]; chatId: string; text: string }) => {
         try {
             const message = await Message.create({
-                attachmentsUrl: payload.aattachmentsUrl,
+                attachmentsUrl: payload.attachmentsUrl,
                 chatId: payload.chatId,
                 sender: socket.data.user._id,
                 text: payload.text
