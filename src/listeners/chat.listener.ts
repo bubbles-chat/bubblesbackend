@@ -32,13 +32,26 @@ const registerChatHandler = (io: Server<DefaultEventsMap, DefaultEventsMap, Defa
             })
             io.to(payload.chatId).emit('chat:messageAdded', { chatId: payload.chatId, message })
         } catch (e) {
-            console.error('newMessage', e);
+            console.error('newMessage:', e);
+        }
+    }
+
+    const deleteMessage = async (payload: string) => {
+        try {
+            const message = await Message.findByIdAndDelete(payload)
+
+            if (message) {
+                socket.emit('chat:messageDeleted', payload)
+            }
+        } catch (e) {
+            console.error('deleteMessage:', e);
         }
     }
 
     socket.on('chat:joinRoom', joinChatRoom)
     socket.on('chat:leaveRoom', leaveChatRoom)
     socket.on('chat:newMessage', newMessage)
+    socket.on('chat:deleteMessage', deleteMessage)
 }
 
 export default registerChatHandler
