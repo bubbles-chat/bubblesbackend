@@ -1,9 +1,10 @@
 import { UploadApiOptions } from "cloudinary";
 import cloudinary from "./cloudinary.config"
 
-export const uploadFile = async (file: string, resourceType: string, folder: string) => {
+export const uploadFile = async (file: string, fileName: string, resourceType: string, folder: string) => {
     try {
-        let uploadOptions: UploadApiOptions = { folder };
+        let uploadOptions: UploadApiOptions = { folder, public_id: fileName, use_filename: true };
+
         switch (resourceType) {
             case 'image':
                 uploadOptions.resource_type = 'image';
