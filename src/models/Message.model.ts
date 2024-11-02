@@ -4,7 +4,7 @@ const MessageSchema = new Schema({
     chatId: { type: Schema.ObjectId, ref: 'Chat', required: true },
     sender: { type: Schema.ObjectId, ref: 'User', required: true },
     text: { type: String, required: false },
-    attachmentsUrl: [{ url: String, mimeType: String }],
+    attachmentsUrl: [{ url: String, mimeType: String, name: String, publicId: String }],
 }, { timestamps: true })
 
 const Message = model('Message', MessageSchema)

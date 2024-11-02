@@ -53,7 +53,7 @@ export const uploadAttachment = async (req: Request, res: Response) => {
             return
         }
 
-        const uploadResult = await uploadFile(file.path, getResourceType(file.mimetype), chatId)
+        const uploadResult = await uploadFile(file.path, file.originalname, getResourceType(file.mimetype), chatId)
 
         res.status(201).json({
             message: "File uploaded",
