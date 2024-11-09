@@ -131,7 +131,7 @@ export const acceptReuqest = async (req: Request, res: Response): Promise<void> 
     }
 
     const chat = await Chat.create({
-        participants: [acceptedRequest.sender, acceptedRequest.receiver]
+        participants: [{ user: acceptedRequest.sender }, { user: acceptedRequest.receiver }]
     })
 
     await User.findByIdAndUpdate(acceptedRequest.sender, {
