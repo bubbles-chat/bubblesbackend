@@ -3,6 +3,8 @@ import Chat from "../../models/Chat.model";
 import User from "../../models/User.model";
 import { notifyUser } from "../../services/fcm.service";
 import { io } from "../../io";
+import { uploadFile } from "../../cloudinary/cloudinary.utils";
+import { getResourceType } from "../../utils/fileTypes";
 
 export const createGroupChat = async (req: Request, res: Response) => {
     const { chatName } = req.body
@@ -247,4 +249,55 @@ export const removeParticipant = async (req: Request, res: Response) => {
     }
 
     res.status(200).json({ message: "Removed participant", chat })
+}
+
+export const changeGroupChatPhoto = async (req: Request, res: Response) => {
+    const file = req.file
+    const { chatId } = req.params
+    const requesterId = req.authUser._id.toString()
+
+    if (!chatId) {
+        res.status(400).json({ message: "Chat ID is required" })
+        return
+    }
+
+    if (!file) {
+        res.status(400).json({ message: "No file uploaded" })
+        return
+    }
+
+    let chat = await Chat.findById(chatId)
+
+    if (chat?.type !== 'group') {
+        res.status(400).json({ message: "You can't modify participants' role in a non-group chat" })
+        return
+    }
+
+    const participants = chat?.participants
+    const userIds = participants.map(participant => participant.user._id.toString())
+    const requesterIndex = userIds.indexOf(requesterId)
+
+    if (requesterIndex < 0) {
+        res.status(400).json({ message: "You are not a participant" })
+        return
+    }
+
+    if (!participants[requesterIndex].isAdmin) {
+        res.status(400).json({ message: "You are not an admin" })
+        return
+    }
+
+    const uploadResult = await uploadFile(file.path, 'chatPhoto', getResourceType(file.mimetype), chatId)
+    chat = await Chat.findByIdAndUpdate(chatId, {
+        photoUrl: uploadResult.secure_url
+    }, { new: true })
+
+    if (chat) {
+        io.to(chat._id.toString()).emit("chat:photoUpdated", { chatId, url: uploadResult.secure_url })
+    }
+
+    res.status(200).json({
+        message: "File uploaded",
+        chat
+    })
 }
