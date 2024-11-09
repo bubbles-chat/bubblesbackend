@@ -1,7 +1,10 @@
-import { model, Schema } from "mongoose";
+import { model, Query, Schema } from "mongoose";
 
 const ChatSchema = new Schema({
-    participants: [{ type: Schema.ObjectId, required: true, ref: 'User' }],
+    participants: [{
+        user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+        isAdmin: { type: Boolean }
+    }],
     lastMessage: { type: Schema.ObjectId, ref: 'Message' },
     type: {
         type: String,
@@ -11,8 +14,15 @@ const ChatSchema = new Schema({
     chatName: {
         type: String,
         required: false
+    },
+    photoUrl: {
+        type: String, required: false, default: ''
     }
 }, { timestamps: true });
+
+ChatSchema.pre('find', function () {
+    this.populate('participants.user');
+})
 
 const Chat = model('Chat', ChatSchema)
 export default Chat
