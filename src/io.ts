@@ -9,7 +9,6 @@ export const io = new Server(server)
 
 const onConnection = (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) => {
     registerChatHandler(io, socket)
-    console.log('A user has connected', socket.data.user._id);
 }
 
 io.use(socketAuth)
