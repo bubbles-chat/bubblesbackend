@@ -5,6 +5,7 @@ import { notifyUser } from "../../services/fcm.service";
 import { io } from "../../io";
 import { uploadFile } from "../../cloudinary/cloudinary.utils";
 import { getResourceType } from "../../utils/fileTypes";
+import { emitToUser } from "../../socket/socket.util";
 
 export const createGroupChat = async (req: Request, res: Response) => {
     const { chatName } = req.body
@@ -106,6 +107,7 @@ export const addUserToGroupChat = async (req: Request, res: Response) => {
             body: `An admin added you to ${chat.chatName}`
         })
         io.to(chat._id.toString()).emit('chat:userAdded', { chatId, participant: { user, isAdmin: false } })
+        emitToUser(user._id, "user:addedToChat", { chat })
     }
 
     res.status(200).json({ message: "User added successfully", chat })
