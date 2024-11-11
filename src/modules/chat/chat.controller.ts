@@ -209,7 +209,7 @@ export const removeParticipant = async (req: Request, res: Response) => {
         return
     }
 
-    if (!participants[requesterIndex].isAdmin) {
+    if (!participants[requesterIndex].isAdmin && !participants[requesterIndex].user._id.equals(userId)) {
         res.status(400).json({ message: "You are not an admin" })
         return
     }
@@ -219,7 +219,7 @@ export const removeParticipant = async (req: Request, res: Response) => {
         return
     }
 
-    if (participants[userIndex].isAdmin) {
+    if (participants[userIndex].isAdmin && !participants[userIndex].user._id.equals(req.authUser._id)) {
         res.status(400).json({ message: "You can't remove an admin" })
         return
     }
