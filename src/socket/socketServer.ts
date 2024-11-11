@@ -1,8 +1,8 @@
 import { createServer } from "http";
-import app from "./app";
+import app from "../app";
 import { DefaultEventsMap, Server, Socket } from "socket.io";
-import socketAuth from "./middlewares/socketAuth.middleware";
-import registerChatHandler from "./listeners/chat.listener";
+import socketAuth from "../middlewares/socketAuth.middleware";
+import registerChatHandler from "../listeners/chat.listener";
 
 const server = createServer(app)
 export const io = new Server(server)

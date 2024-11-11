@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Chat from "../../models/Chat.model";
 import User from "../../models/User.model";
 import { notifyUser } from "../../services/fcm.service";
-import { io } from "../../io";
+import { io } from "../../socket/socketServer";
 import { uploadFile } from "../../cloudinary/cloudinary.utils";
 import { getResourceType } from "../../utils/fileTypes";
 import { emitToUser } from "../../socket/socket.util";
