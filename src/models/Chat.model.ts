@@ -28,5 +28,9 @@ ChatSchema.pre('findOneAndUpdate', function () {
     this.populate('participants.user');
 })
 
+ChatSchema.pre('save', function() {
+    this.populate('participants.user')
+})
+
 const Chat = model('Chat', ChatSchema)
 export default Chat
