@@ -4,6 +4,7 @@ import { notifyUser } from "../../services/fcm.service";
 import { Types } from "mongoose";
 import User from "../../models/User.model";
 import Chat from "../../models/Chat.model";
+import { emitToUser } from "../../socket/socket.util";
 
 export const addRequest = async (req: Request, res: Response): Promise<void> => {
     const { receiver } = req.params
@@ -153,6 +154,9 @@ export const acceptReuqest = async (req: Request, res: Response): Promise<void> 
             }
         }
     })
+
+    emitToUser(request.sender, "user:addedToChat", { chat })
+    emitToUser(request.receiver, "user:addedToChat", { chat })
 
     res.status(200).json({ message: 'Request has been accepted', request: acceptedRequest })
 }
