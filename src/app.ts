@@ -6,6 +6,7 @@ import checkAuth from './middlewares/auth.middleware'
 import notificationTokenRouter from './modules/notificationToken/notificationToken.route'
 import requestRouter from './modules/request/request.route'
 import messageRouter from './modules/message/message.route'
+import chatRouter from './modules/chat/chat.route'
 
 config()
 
@@ -25,6 +26,7 @@ app.use('/user', userRouter)
 app.use('/notificationToken', notificationTokenRouter)
 app.use('/request', requestRouter)
 app.use('/message', messageRouter)
+app.use('/chat', chatRouter)
 
 app.get('/', (req, res, next) => {
     res.send('hello world')

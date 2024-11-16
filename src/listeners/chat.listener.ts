@@ -23,16 +23,17 @@ const registerChatHandler = (io: Server<DefaultEventsMap, DefaultEventsMap, Defa
         text: string
     }) => {
         try {
-            const message = await Message.create({
+            const message = await (await Message.create({
                 attachmentsUrl: payload.attachmentsUrl,
                 chatId: payload.chatId,
                 sender: socket.data.user._id,
                 text: payload.text
-            })
+            })).populate('sender')
             const chat = await Chat.findByIdAndUpdate(payload.chatId, {
                 lastMessage: message._id
             })
-            const users = chat?.participants.filter(id => id !== socket.data.user._id) ?? []
+            const participants = chat?.participants.filter(id => id !== socket.data.user._id) ?? []
+            const users = participants.map(user => user._id)
 
             await notifySomeUsers(users, {
                 title: chat?.chatName ? chat.chatName : socket.data.user.displayName,

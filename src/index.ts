@@ -1,4 +1,4 @@
-import server from "./io"
+import server from "./socket/socketServer"
 
 const port = process.env.PORT ?? 3000
 

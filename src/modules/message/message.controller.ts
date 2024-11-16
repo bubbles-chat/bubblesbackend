@@ -16,6 +16,7 @@ export const getMessages = async (req: Request, res: Response) => {
         .sort({ createdAt: 'desc' })
         .skip(Number(skip))
         .limit(Number(limit))
+        .populate('sender')
 
     res.status(200).json({ message: 'Messages found', messages })
 }
