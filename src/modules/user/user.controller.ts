@@ -19,6 +19,10 @@ export const getUserByEmail = async (req: Request, res: Response): Promise<void>
                 sort: {
                     updatedAt: -1
                 }
+            },
+            populate: {
+                path: 'participants.user',
+                model: 'User'
             }
         })
 
